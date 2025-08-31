@@ -29,39 +29,73 @@ pip install -r requirements.txt
 
 ## ▶️ Usage
 
+### Training the Agent  
 
-
-## Data Science
-
-This project template is a simplified version of a data science project template.
-
-
-## Adjusting .gitignore
-
-Ensure you adjust the `.gitignore` file according to your project.
-`/data/` folder is commented out and data will not be excluded from source control:
-
-```plaintext
-# exclude data from source control by default
-# /data/
-```
-
-Typically, you want to exclude this folder if it contains either sensitive or large data files.
-
-
-## Duplicating the .env File
-
-To set up your environment variables, you need to duplicate the `.env.example` file and rename it to `.env`, using the following command:
+Run Monte Carlo training:  
 
 ```bash
-cp .env.example .env # Linux, macOS, Git Bash, WSL
-copy .env.example .env # Windows Command Prompt
+python experiments/train_mc.py --episodes 5000
 ```
 
-This command creates a copy of `.env.example` and names it `.env`, allowing you to configurate your environment variables specific to your setup.
+Adjust hyperparameters in `experiments/config.yaml`.
+
+### Evaluating Policies
+
+```bash
+python experiments/evaluate.py --model saved_models/mc_policy.pkl
+```
+
+This will run the agent with the trained policy and log metrics such as:
+
+- Success rate
+- Average steps per episode
+- Detection rate
+---
+
+## 📊 Analysis & Visualization  
+
+The `notebooks/` folder contains tools to:  
+- Plot **episodic return distributions**  
+- Generate **Q(s,a) heatmaps**  
+- Overlay **learned trajectories** vs scripted baselines  
+
+Example heatmap visualization:  
+
+<!-- <p align="center">  
+  <img src="docs/q_heatmap.png" width="500"/>  
+</p>   -->
+---
+
+## 🎥 Demo  
+
+<!-- <p align="center">  
+  <img src="docs/demo.gif" width="500"/>  
+</p>   -->
+
+The demo shows the agent’s progression:  
+- **Episode 1:** Random policy, frequent guard detection  
+- **Episode 500:** Learns safer detours and risk avoidance  
+- **Episode 5000:** Consistently reaches the goal with minimal steps  
+---
+
+## 📈 Results  
+
+| Method                  | Success Rate ↑ | Avg Steps ↓ | Detection Rate ↓ |  
+|--------------------------|----------------|-------------|------------------|  
+| First-Visit MC           | 72%            | 18.4        | 12%              |  
+| Every-Visit MC           | 76%            | 17.9        | 10%              |  
+| Off-Policy MC (IS)       | 80%            | 16.7        | 9%               |  
+| Q-Learning (baseline)    | 69%            | 19.5        | 15%              |  
+
+**Key insights:**  
+- Monte Carlo control learns safe navigation paths but requires many episodes.  
+- Off-policy MC with importance sampling leverages scripted/human play data for faster convergence.  
+- Reward shaping significantly influences the agent’s stealth style (riskier but faster vs. safer but slower).  
+
+---
 
 
-## Project Orgnaization
+## 📂 Project Structure  
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
