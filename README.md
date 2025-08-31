@@ -98,8 +98,8 @@ The demo shows the agent’s progression:
 ## 📂 Project Structure  
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── README.md          <- The top-level README for developers using this project
+├── LICENSE            <- GPL-3.0 license
+├── README.md          <- README for developers using this project
 ├── data
 │   ├── external       <- Data from third party sources
 │   ├── interim        <- Intermediate data that has been transformed
