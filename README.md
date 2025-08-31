@@ -98,48 +98,31 @@ The demo shows the agent’s progression:
 ## 📂 Project Structure  
 
 ```
-├── LICENSE            <- GPL-3.0 license
-├── README.md          <- README for developers using this project
-├── data
-│   ├── external       <- Data from third party sources
-│   ├── interim        <- Intermediate data that has been transformed
-│   ├── processed      <- The final, canonical data sets for modeling
-│   └── raw            <- The original, immutable data dump
+escape-artist-agent/
 │
-├── models             <- Trained and serialized models, model predictions, or model summaries
+├── README.md # Project overview, install, demo, etc.
+├── environment/
+│ ├── stealth_env.py # Gym-style stealth environment
+│ ├── utils.py # Helpers: reward shaping, map loading
+│ └── maps/ # ASCII/JSON maps
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`
+├── agent/
+│ ├── monte_carlo.py # First-Visit MC control implementation
+│ ├── policies.py # ε-soft policies, greedy updates
+│ └── importance_sampling.py # Off-policy MC
 │
-├── references         <- Data dictionaries, manuals, and all other explanatory materials
+├── experiments/
+│ ├── train_mc.py # Training script
+│ ├── evaluate.py # Evaluation script
+│ ├── ablations.py # Comparisons (MC vs Q-learning)
+│ └── config.yaml # Hyperparameters
 │
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
+├── notebooks/
+│ ├── analysis.ipynb # Training curves, returns
+│ └── q_heatmaps.ipynb # Q(s,a) heatmaps
 │
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-└── src                         <- Source code for this project
-    │
-    ├── __init__.py             <- Makes src a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    │    
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    ├── plots.py                <- Code to create visualizations 
-    │
-    └── services                <- Service classes to connect with external platforms, tools, or APIs
-        └── __init__.py 
+├── logs/ # Training logs, CSVs
+└── docs/ # Images, GIFs, figures for README
 ```
 
 --------
