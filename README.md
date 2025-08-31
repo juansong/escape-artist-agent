@@ -1,4 +1,34 @@
-# Data Project Template
+# 🎮 Monte Carlo Stealth Agent  
+
+An implementation of **Monte Calro control** for a custom escape tactics game environment.
+The agent learns to escape a grid world, avoid guards, and reach the extraction point through trial and error.
+
+This project demonstrates how **reinforcement learning (RL)** - specifically **on-policy and off-policy Monte Carlo methods** - can be applied to
+**game AI design**
+
+---
+
+## 🚀 Features  
+- ✅ On-policy **First-Visit** and **Every-Visit Monte Carlo Control**  
+- ✅ Off-policy Monte Carlo with **Importance Sampling**  
+- ✅ Custom **grid-based escape environment** with guards, traps, and goals  
+- ✅ Visualizations: Q(s,a) heatmaps, trajectory overlays, episodic return plots  
+- ✅ Comparisons with **Q-learning** for benchmarking  
+
+---
+
+## 🛠️ Installation  
+
+Clone the repo and install dependencies:  
+
+```bash
+git clone https://github.com/your-username/mc-stealth-agent.git
+cd mc-stealth-agent
+pip install -r requirements.txt
+```
+
+## ▶️ Usage
+
 
 
 ## Data Science
