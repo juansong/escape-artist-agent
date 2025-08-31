@@ -100,29 +100,29 @@ The demo shows the agent’s progression:
 ```
 escape-artist-agent/
 │
-├── README.md           <- Project overview, install, demo, etc.
+├── README.md                 <- Project overview, install, demo, etc.
 ├── environment/
-│ ├── escape_env.py     <- Gym-style stealth environment
-│ ├── utils.py          <- Helpers: reward shaping, map loading
-│ └── maps/             <- ASCII/JSON maps
+│ ├── escape_env.py           <- Gym-style stealth environment
+│ ├── utils.py                <- Helpers: reward shaping, map loading
+│ └── maps/                   <- ASCII/JSON maps
 │
 ├── agent/
-│ ├── monte_carlo.py    <- First-Visit MC control implementation
-│ ├── policies.py       <- ε-soft policies, greedy updates
-│ └── importance_sampling.py <- Off-policy MC
+│ ├── monte_carlo.py          <- First-Visit MC control implementation
+│ ├── policies.py             <- ε-soft policies, greedy updates
+│ └── importance_sampling.py  <- Off-policy MC
 │
 ├── experiments/
-│ ├── train_mc.py       <- Training script
-│ ├── evaluate.py       <- Evaluation script
-│ ├── ablations.py      <- Comparisons (MC vs Q-learning)
-│ └── config.yaml       <-  Hyperparameters
+│ ├── train_mc.py             <- Training script
+│ ├── evaluate.py             <- Evaluation script
+│ ├── ablations.py            <- Comparisons (MC vs Q-learning)
+│ └── config.yaml             <-  Hyperparameters
 │
 ├── notebooks/
-│ ├── analysis.ipynb    <- Training curves, returns
-│ └── q_heatmaps.ipynb  <- Q(s,a) heatmaps
+│ ├── analysis.ipynb          <- Training curves, returns
+│ └── q_heatmaps.ipynb        <- Q(s,a) heatmaps
 │
-├── logs/               <- Training logs, CSVs
-└── docs/               <- Images, GIFs, figures for README
+├── logs/                     <- Training logs, CSVs
+└── docs/                     <- Images, GIFs, figures for README
 ```
 
 --------
