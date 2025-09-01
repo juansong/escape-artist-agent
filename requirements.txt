@@ -1,10 +1,9 @@
-gym==0.26.2
-numpy==1.25.2
-matplotlib==3.8.1
-pandas==2.1.1
-imageio==2.31.1
-tqdm==4.66.1
+numpy==1.26.4
+pandas==2.2.2
+tqdm==4.66.4
+matplotlib==3.9.1
 seaborn
 ipykernel
-
-
+gymnasium==0.29.1
+pygame==2.5.2
+graphviz==0.20.3   # Python wrapper (needs system Graphviz too)

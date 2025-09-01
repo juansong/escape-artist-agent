@@ -1,12 +1,11 @@
 # 🎮 Escape Artist Agent  
 
 An implementation of **Monte Carlo control** for a custom escape tactics game environment.  
-The agent learns to escape a grid world, avoid traps, and reach the goal through trial and error.
+The agent learns to escape a grid world, avoid traps, and reach the extraction point through trial and error.
 
 This project demonstrates how **reinforcement learning (RL)** — specifically **on-policy and off-policy Monte Carlo methods** — can be applied to **game AI design**.
 
 ---
-
 
 ## 🚀 Features  
 - ✅ On-policy **First-Visit** and **Every-Visit Monte Carlo Control**  
@@ -17,97 +16,54 @@ This project demonstrates how **reinforcement learning (RL)** — specifically *
 
 ---
 
+## ⚙️ Installation
+```bash
+# Clone repository
+git clone https://github.com/juansong/escape-artist-agent.git
+cd escape-artist-agent
+
+# Create Conda environment
+conda env create -f environment.yml
+conda activate escape-agent
+
+# Or install via pip (recommended)
+pip install -r requirements.txt
+
+```
+
 ## 🛠️ Quick Usage
 
-### 1️⃣ Install dependencies
+### 1️⃣ Train agent
+```bash
+python -m experiments.train_mc
+```
+- Saves `logs/q_table.pkl` and `logs/training_log.csv`.
 
-Clone the repo and install dependencies:  
+### 2️⃣ Evaluate trained policy
 
 ```bash
-git clone https://github.com/juansong/mc-stealth-agent.git
-cd escape-artist-agent
-pip install -r requirements.txt
+python -m expeeriments.evaluate
 ```
+- Computes **Success Rate**, **Average Steps**, **Detection Rate**.
 
-### 2️⃣ Train the agent
+### 3️⃣ Run demo
 
 ```bash
-python experiments/train_mc.py
+python -m demo
 ```
-Training logs and Q-table are saved in `logs/`
-
-### 3️⃣ Evaluate the learned policy
-
-```bash
-python experiments/evaluate.py
-```
-Reports success rate, average steps, and trap encounter rate
-
-### 4️⃣ Run a demo
-
-```bash
-python demo.py
-```
-saves `docs/escape_demo.gif` showing the agent navigating the grid
-
-### 5️⃣ Analyze results
-
-```bash
-jupyter notebook notebooks/analysis.ipynb
-jupyter notebook notebooks/q_heatmaps.ipynb
-```
----
-
-## 📂 Project Structure  
-```
-escape-artist-agent/
-│
-├── README.md                     <- Full portfolio README (intro, usage, demo, results)
-├── requirements.txt              <- All dependencies with tested versions
-│
-├── environment/
-│   ├── escape_env.py             <- Custom Escape environment with random traps
-│   ├── utils.py                  <- Helpers: reward shaping, map loading
-│   └── maps/                     <- ASCII/JSON maps
-│
-├── agent/
-│   ├── monte_carlo.py            <- First-Visit Monte Carlo agent
-│   ├── policies.py               <- ε-soft policies, greedy updates
-│   └── importance_sampling.py    <- Off-policy Monte Carlo methods
-│
-├── experiments/
-│   ├── train_mc.py               <- Training script (saves Q-table + training log)
-│   ├── evaluate.py               <- Policy evaluation script
-│   ├── ablations.py              <- Comparisons: MC vs Q-learning
-│   └── config.yaml               <- Hyperparameters
-│
-├── notebooks/
-│   ├── analysis.ipynb            <- Plot training curves, average returns
-│   └── q_heatmaps.ipynb          <- Visualize Q(s,a) heatmaps
-│
-├── logs/                         <- Automatically saved during training
-│   ├── training_log.csv          <- Episode rewards per training run
-│   └── q_table.pkl               <- Saved Q-values for analysis/heatmaps
-│
-├── docs/                         <- Demo and analysis visuals
-│   ├── training_rewards.png      <- Example reward curve
-│   └── escape_demo.gif           <- Example GIF of trained agent
-│
-└── demo.py                        <- Runs trained agent and generates GIF
-```
+- Displays trained agent navigating the grid.
+- Generates GIF in `docs/escape_demo.gif`.
 ---
 
 ## 📊 Results
 
 ### Training Performance
-**Reward progression over episodes**:
+**Reward progression over episodes (reward curve)**:
 
 ![Training Rewards](docs/training_rewards.png)
 
 - Shows how the agent learns to maximize cumulative reward  
 - Average return over the last 100 episodes indicates stable policy  
-
----
 
 ### Evaluation Metrics
 
@@ -125,46 +81,100 @@ escape-artist-agent/
 
 ---
 
-### Demo Episode
-A trained agent escaping traps and reaching the goal:
+## 🧪Analysis & Visualization
+
+```bash
+jupyter notebook notebooks/analysis.ipynb
+jupyter notebook notebooks/q_heatmaps.ipynb
+```
+- Use `notebooks/analysis.ipynb` to plot **episodic reward progression**.
+- Use `notebooks/q_heatmaps.ipynb` to visualize **Q(s,a) heatmaps**.
+- Metrics are logged in `logs/training_log.csv` for reproducibilty.
+
+---
+
+## 📂 Project Structure  
+```
+escape-artist-agent/
+│
+├── README.md                         <- Full portfolio README (intro, usage, demo, results)
+├── requirements.txt                  <- All dependencies with tested versions
+│
+├── environment/
+│   ├── escape_env.py                 <- Custom Escape environment with random traps
+│   ├── utils.py                      <- Helpers: reward shaping, map loading
+│   └── maps/                         <- ASCII/JSON maps
+│
+├── agent/
+│   ├── monte_carlo.py                <- First-Visit Monte Carlo agent
+│   ├── policies.py                   <- ε-soft policies, greedy updates
+│   └── importance_sampling.py        <- Off-policy Monte Carlo methods
+│
+├── experiments/
+│   ├── train_mc.py                   <- Training script (saves Q-table + training log)
+│   ├── evaluate.py                   <- Policy evaluation script
+│   ├── ablations.py                  <- Comparisons: MC vs Q-learning
+│   └── config.yaml                   <- Hyperparameters
+│
+├── notebooks/
+│   ├── analysis.ipynb                <- Plot training curves, average returns
+│   └── q_heatmaps.ipynb              <- Visualize Q(s,a) heatmaps
+│
+├── logs/                             <- Automatically saved during training
+│   ├── training_log.csv              <- Episode rewards per training run
+│   └── q_table.pkl                   <- Saved Q-values for analysis/heatmaps
+│
+├── docs/                         
+│   ├── training_rewards.png          <- Demo reward curve
+│   ├── escape_demo.gif               <- Demo GIF of trained agent
+│   └── dependency_graph.png          <- Dependency graph
+│
+├── scripts/                         
+│   └── generate_dependency_graph.py  <- Generate ependency graph of each modules
+│
+└── demo.py                           <- Runs trained agent and generates GIF
+```
+---
+
+## 📂 Code Dependency Graph
+
+```bash
+# Install Graphviz (macOS, Windows)
+brew install graphviz
+choco install graphviz
+
+# Verify after installation
+dot -V
+
+# Run the script
+python scripts/generate_dependency_graph.py
+```
+
+The graph illustrates how different modules in this project interact.
+
+- **Main scripts** (`train_mc.py`, `evaluate.py`, `demo.py`) handle execution.
+- **Agent modules** (`monte_carlo.py`, `importance_sampling.py`, `policies.py`) contain the logic.
+- **Environment modules** (`escape_env.py`, `utils.py`) simulate the grid world, manage maps, and handle reward shaping.
+- **Benchmark module** (`Ablations.py`) enables benchmarking and comparisons between methods.
+- **Arrows** indicate import or usage dependencies.
+
+![Dependency Graph](docs/dependency_graph.png)
+
+---
+
+### Demo
+Demo Episode: A trained agent escaping the environment avoiding traps and reaching the goal:
+
+```bash
+python -m demo
+```
 
 ![Escape Demo](docs/escape_demo.gif)
 ---
 
-## 📓 Analysis
-Notebooks for deeper exploration:
-- **analysis.ipynb**   -> reward curves, moving averages, average return
-- **q_heatmaps.ipynb** -> heatmaps of Q(s,a) values to visualize learned policy
----
-
-## 🛠️ Dependencies
-```text
-gym
-numpy
-matplotlib
-seaborn
-pandas
-imageio
-tqdm
-```
-
-Install via:
-```bash
-pip install -r requirements.txt
-```
----
 
 ## 📖 Notes
 - **Python version**: 3.9+ recommended
-- To install:
-```bash
-pip install -r requirements.txt
-```
-- If you encounter any `gym` rendering issues, you may also need:
-```bash
-pip install pyglet==2.3.2
-```
-
 - Traps are randomly generated each episode; the agent learns a robust policy
 - The Q-table and reward logs allow full reproducibility and analysis
 - GIF demo provides visual proof of the agent’s learning
