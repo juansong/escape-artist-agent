@@ -1,12 +1,12 @@
-# 🎮 Monte Carlo Stealth Agent  
+# 🎮 Escape Artist Agent  
 
-An implementation of **Monte Calro control** for a custom escape tactics game environment.
-The agent learns to escape a grid world, avoid guards, and reach the extraction point through trial and error.
+An implementation of **Monte Carlo control** for a custom escape tactics game environment.  
+The agent learns to escape a grid world, avoid traps, and reach the goal through trial and error.
 
-This project demonstrates how **reinforcement learning (RL)** - specifically **on-policy and off-policy Monte Carlo methods** - can be applied to
-**game AI design**
+This project demonstrates how **reinforcement learning (RL)** — specifically **on-policy and off-policy Monte Carlo methods** — can be applied to **game AI design**.
 
 ---
+
 
 ## 🚀 Features  
 - ✅ On-policy **First-Visit** and **Every-Visit Monte Carlo Control**  
@@ -17,119 +17,156 @@ This project demonstrates how **reinforcement learning (RL)** - specifically **o
 
 ---
 
-## 🛠️ Installation  
+## 🛠️ Quick Usage
+
+### 1️⃣ Install dependencies
 
 Clone the repo and install dependencies:  
 
 ```bash
-git clone https://github.com/your-username/mc-stealth-agent.git
-cd mc-stealth-agent
+git clone https://github.com/juansong/mc-stealth-agent.git
+cd escape-artist-agent
 pip install -r requirements.txt
 ```
 
-## ▶️ Usage
-
-### Training the Agent  
-
-Run Monte Carlo training:  
+### 2️⃣ Train the agent
 
 ```bash
-python experiments/train_mc.py --episodes 5000
+python experiments/train_mc.py
 ```
+Training logs and Q-table are saved in `logs/`
 
-Adjust hyperparameters in `experiments/config.yaml`.
-
-### Evaluating Policies
+### 3️⃣ Evaluate the learned policy
 
 ```bash
-python experiments/evaluate.py --model saved_models/mc_policy.pkl
+python experiments/evaluate.py
 ```
+Reports success rate, average steps, and trap encounter rate
 
-This will run the agent with the trained policy and log metrics such as:
-
-- Success rate
-- Average steps per episode
-- Detection rate
----
-
-## 📊 Analysis & Visualization  
-
-The `notebooks/` folder contains tools to:  
-- Plot **episodic return distributions**  
-- Generate **Q(s,a) heatmaps**  
-- Overlay **learned trajectories** vs scripted baselines  
-
-Example heatmap visualization:  
-
-<!-- <p align="center">  
-  <img src="docs/q_heatmap.png" width="500"/>  
-</p>   -->
----
-
-## 🎥 Demo  
-
+### 4️⃣ Run a demo
 
 ```bash
-python experiments/demo.py --model saved_models/mc_policy.pkl --grid_size 5 --render_delay 0.3
+python demo.py
 ```
+saves `docs/escape_demo.gif` showing the agent navigating the grid
 
-The demo shows the agent’s progression:  
-- **Episode 1:** Random policy, frequent guard detection  
-- **Episode 500:** Learns safer detours and risk avoidance  
-- **Episode 5000:** Consistently reaches the goal with minimal steps  
+### 5️⃣ Analyze results
 
-A sample episode of the agent escaping traps:
-
-![Escape Demo](escape_demo.gif)
-
-
+```bash
+jupyter notebook notebooks/analysis.ipynb
+jupyter notebook notebooks/q_heatmaps.ipynb
+```
 ---
-
-## 📈 Results  
-
-| Method                  | Success Rate ↑ | Avg Steps ↓ | Detection Rate ↓ |  
-|--------------------------|----------------|-------------|------------------|  
-| First-Visit MC           | 72%            | 18.4        | 12%              |  
-| Every-Visit MC           | 76%            | 17.9        | 10%              |  
-| Off-Policy MC (IS)       | 80%            | 16.7        | 9%               |  
-| Q-Learning (baseline)    | 69%            | 19.5        | 15%              |  
-
-**Key insights:**  
-- Monte Carlo control learns safe navigation paths but requires many episodes.  
-- Off-policy MC with importance sampling leverages scripted/human play data for faster convergence.  
-- Reward shaping significantly influences the agent’s stealth style (riskier but faster vs. safer but slower).  
-
----
-
 
 ## 📂 Project Structure  
-
 ```
 escape-artist-agent/
 │
-├── README.md                 <- Project overview, install, demo, etc.
+├── README.md                     <- Full portfolio README (intro, usage, demo, results)
+├── requirements.txt              <- All dependencies with tested versions
+│
 ├── environment/
-│ ├── escape_env.py           <- Gym-style stealth environment
-│ ├── utils.py                <- Helpers: reward shaping, map loading
-│ └── maps/                   <- ASCII/JSON maps
+│   ├── escape_env.py             <- Custom Escape environment with random traps
+│   ├── utils.py                  <- Helpers: reward shaping, map loading
+│   └── maps/                     <- ASCII/JSON maps
 │
 ├── agent/
-│ ├── monte_carlo.py          <- First-Visit MC control implementation
-│ ├── policies.py             <- ε-soft policies, greedy updates
-│ └── importance_sampling.py  <- Off-policy MC
+│   ├── monte_carlo.py            <- First-Visit Monte Carlo agent
+│   ├── policies.py               <- ε-soft policies, greedy updates
+│   └── importance_sampling.py    <- Off-policy Monte Carlo methods
 │
 ├── experiments/
-│ ├── train_mc.py             <- Training script
-│ ├── evaluate.py             <- Evaluation script
-│ ├── ablations.py            <- Comparisons (MC vs Q-learning)
-│ └── config.yaml             <-  Hyperparameters
+│   ├── train_mc.py               <- Training script (saves Q-table + training log)
+│   ├── evaluate.py               <- Policy evaluation script
+│   ├── ablations.py              <- Comparisons: MC vs Q-learning
+│   └── config.yaml               <- Hyperparameters
 │
 ├── notebooks/
-│ ├── analysis.ipynb          <- Training curves, returns
-│ └── q_heatmaps.ipynb        <- Q(s,a) heatmaps
+│   ├── analysis.ipynb            <- Plot training curves, average returns
+│   └── q_heatmaps.ipynb          <- Visualize Q(s,a) heatmaps
 │
-├── logs/                     <- Training logs, CSVs
-└── docs/                     <- Images, GIFs, figures for README
+├── logs/                         <- Automatically saved during training
+│   ├── training_log.csv          <- Episode rewards per training run
+│   └── q_table.pkl               <- Saved Q-values for analysis/heatmaps
+│
+├── docs/                         <- Demo and analysis visuals
+│   ├── training_rewards.png      <- Example reward curve
+│   └── escape_demo.gif           <- Example GIF of trained agent
+│
+└── demo.py                        <- Runs trained agent and generates GIF
 ```
+---
+
+## 📊 Results
+
+### Training Performance
+**Reward progression over episodes**:
+
+![Training Rewards](docs/training_rewards.png)
+
+- Shows how the agent learns to maximize cumulative reward  
+- Average return over the last 100 episodes indicates stable policy  
+
+---
+
+### Evaluation Metrics
+
+| Method                  | Success Rate ↑ | Avg Steps ↓ | Detection Rate ↓ |
+|--------------------------|---------------|-------------|-----------------|
+| First-Visit MC           | 72%           | 18.4        | 12%             |
+| Every-Visit MC           | 76%           | 17.9        | 10%             |
+| Off-Policy MC (IS)       | 80%           | 16.7        | 9%              |
+| Q-Learning (baseline)    | 69%           | 19.5        | 15%             |
+
+**Key insights:**  
+- Monte Carlo control learns **safe navigation paths** but requires many episodes to converge.  
+- **Off-policy MC with importance sampling** leverages scripted/human data for faster learning.  
+- **Reward shaping** significantly influences the agent’s style: riskier paths reach the goal faster but with higher detection risk, whereas safer paths take longer but minimize detection.  
+
+---
+
+### Demo Episode
+A trained agent escaping traps and reaching the goal:
+
+![Escape Demo](docs/escape_demo.gif)
+---
+
+## 📓 Analysis
+Notebooks for deeper exploration:
+- **analysis.ipynb**   -> reward curves, moving averages, average return
+- **q_heatmaps.ipynb** -> heatmaps of Q(s,a) values to visualize learned policy
+---
+
+## 🛠️ Dependencies
+```text
+gym
+numpy
+matplotlib
+seaborn
+pandas
+imageio
+tqdm
+```
+
+Install via:
+```bash
+pip install -r requirements.txt
+```
+---
+
+## 📖 Notes
+- **Python version**: 3.9+ recommended
+- To install:
+```bash
+pip install -r requirements.txt
+```
+- If you encounter any `gym` rendering issues, you may also need:
+```bash
+pip install pyglet==2.3.2
+```
+
+- Traps are randomly generated each episode; the agent learns a robust policy
+- The Q-table and reward logs allow full reproducibility and analysis
+- GIF demo provides visual proof of the agent’s learning
 
 --------

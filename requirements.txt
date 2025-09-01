@@ -1,2 +1,10 @@
+gym==0.26.2
+numpy==1.25.2
+matplotlib==3.8.1
+pandas==2.1.1
+imageio==2.31.1
+tqdm==4.66.1
+seaborn
 ipykernel
-python-dotenv
+
+

@@ -1,57 +1,43 @@
-import argparse
 import pickle
 import numpy as np
-from tqdm import tqdm
-
 from environment.escape_env import EscapeEnv
 from agent.monte_carlo import MCAgent
 
+def evaluate(env, agent, episodes=100):
+    success = 0
+    steps_list = []
+    detection = 0
 
-def evaluate_mc(model_path="saved_models/mc_policy.pkl", episodes=500):
+    for _ in range(episodes):
+        state, _ = env.reset()
+        done = False
+        steps = 0
+
+        while not done:
+            action = agent.choose_action(state)
+            state, reward, terminated, truncated, _ = env.step(action)
+            done = terminated or truncated
+            steps += 1
+            if reward < 0:
+                detection += 1
+
+        if reward > 0:
+            success += 1
+        steps_list.append(steps)
+
+    print(f"Evaluation over {episodes} episodes:")
+    print(f"Success Rate: {success/episodes*100:.2f}%")
+    print(f"Average Steps: {np.mean(steps_list):.2f}")
+    print(f"Detection Rate: {detection/episodes*100:.2f}%")
+
+if __name__ == "__main__":
     env = EscapeEnv(grid_size=5)
 
-    # Load trained policy (Q-table)
-    with open(model_path, "rb") as f:
+    # Load Q-table
+    with open("logs/q_table.pkl", "rb") as f:
         Q = pickle.load(f)
 
     agent = MCAgent(env.action_space)
-    agent.Q = Q  # assign learned Q-table
+    agent.Q = Q
 
-    successes, steps, traps = 0, [], 0
-
-    for _ in tqdm(range(episodes), desc="Evaluating"):
-        state = env.reset()
-        done, step_count = False, 0
-
-        while not done:
-            # Greedy action selection (no epsilon exploration)
-            action = np.argmax([agent.Q.get((state, a), 0.0) for a in range(env.action_space.n)])
-            state, reward, done, _ = env.step(action)
-            step_count += 1
-
-            if reward == 1.0:
-                successes += 1
-            elif reward == -1.0:
-                traps += 1
-
-        steps.append(step_count)
-
-    success_rate = successes / episodes
-    avg_steps = np.mean(steps)
-    trap_rate = traps / episodes
-
-    print("\n--- Evaluation Results ---")
-    print(f"Success Rate: {success_rate * 100:.2f}%")
-    print(f"Average Steps: {avg_steps:.2f}")
-    print(f"Trap Encounter Rate: {trap_rate * 100:.2f}%")
-
-    return success_rate, avg_steps, trap_rate
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluate trained Monte Carlo policy")
-    parser.add_argument("--model", type=str, default="saved_models/mc_policy.pkl", help="Path to trained policy")
-    parser.add_argument("--episodes", type=int, default=500, help="Number of evaluation episodes")
-
-    args = parser.parse_args()
-    evaluate_mc(args.model, args.episodes)
+    evaluate(env, agent)

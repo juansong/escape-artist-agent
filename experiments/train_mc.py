@@ -1,14 +1,13 @@
-import argparse
-import pickle
 import os
+import pickle
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 from environment.escape_env import EscapeEnv
 from agent.monte_carlo import MCAgent
 
-
-def train_mc(episodes=5000, gamma=0.99, epsilon=0.1, save_path="saved_models/mc_policy.pkl"):
+def train_mc(episodes=5000, gamma=0.99, epsilon=0.1, log_dir="logs"):
     env = EscapeEnv(grid_size=5)
     agent = MCAgent(env.action_space, epsilon=epsilon, gamma=gamma)
 
@@ -16,12 +15,13 @@ def train_mc(episodes=5000, gamma=0.99, epsilon=0.1, save_path="saved_models/mc_
 
     for episode in tqdm(range(episodes), desc="Training"):
         states, actions, rewards = [], [], []
-        state = env.reset()
+        state, _ = env.reset()
         done = False
 
         while not done:
             action = agent.choose_action(state)
-            next_state, reward, done, _ = env.step(action)
+            next_state, reward, terminated, truncated, _ = env.step(action)
+            done = terminated or truncated
 
             states.append(state)
             actions.append(action)
@@ -32,21 +32,23 @@ def train_mc(episodes=5000, gamma=0.99, epsilon=0.1, save_path="saved_models/mc_
         agent.update(states, actions, rewards)
         rewards_per_episode.append(np.sum(rewards))
 
-    # Save trained policy
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    with open(save_path, "wb") as f:
-        pickle.dump(agent.Q, f)
+    os.makedirs(log_dir, exist_ok=True)
 
-    print(f"\nTraining finished. Policy saved to {save_path}")
+    # Save Q-table (convert defaultdict to dict)
+    q_table_path = os.path.join(log_dir, "q_table.pkl")
+    with open(q_table_path, "wb") as f:
+        pickle.dump(dict(agent.Q), f)
+
+    # Save training rewards
+    log_path = os.path.join(log_dir, "training_log.csv")
+    df = pd.DataFrame({
+        "episode": np.arange(1, episodes + 1),
+        "reward": rewards_per_episode
+    })
+    df.to_csv(log_path, index=False)
+
+    print(f"Training finished. Logs saved in '{log_dir}'")
     return rewards_per_episode
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train Monte Carlo Agent in EscapeEnv")
-    parser.add_argument("--episodes", type=int, default=5000, help="Number of training episodes")
-    parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
-    parser.add_argument("--epsilon", type=float, default=0.1, help="Exploration rate")
-    parser.add_argument("--save_path", type=str, default="saved_models/mc_policy.pkl", help="Path to save policy")
-
-    args = parser.parse_args()
-    train_mc(args.episodes, args.gamma, args.epsilon, args.save_path)
+    train_mc()

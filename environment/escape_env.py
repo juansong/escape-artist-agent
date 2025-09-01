@@ -1,89 +1,54 @@
-import gym
-from gym import spaces
 import numpy as np
-import random
+import gymnasium as gym
+from gymnasium import spaces
 
 class EscapeEnv(gym.Env):
-    """
-    Escape Grid-World Environment.
-    The agent must reach the exit (E) while avoiding traps (T).
-    
-    Tiles:
-    - S : Start (safe)
-    - F : Floor (safe)
-    - T : Trap (danger, episode ends)
-    - E : Exit / Goal (success, episode ends)
-    """
+    metadata = {"render_modes": ["human"], "render_fps": 4}
 
-    metadata = {"render.modes": ["human"]}
-
-    def __init__(self, grid_size=5):
-        super(EscapeEnv, self).__init__()
-
-        # Action space: up, down, left, right
-        self.action_space = spaces.Discrete(4)
-
-        # Observation space: agent position (row, col) in grid
-        self.observation_space = spaces.Tuple((
-            spaces.Discrete(grid_size),
-            spaces.Discrete(grid_size)
-        ))
-
+    def __init__(self, grid_size=5, n_traps=3):
+        super().__init__()
         self.grid_size = grid_size
+        self.n_traps = n_traps
+        self.action_space = spaces.Discrete(4)
+        self.observation_space = spaces.Discrete(grid_size * grid_size)
+        self.reward_goal = 1.0
+        self.reward_trap = -1.0
+        self.reward_step = -0.01
         self.reset()
 
-    def reset(self):
-        """Reset environment at the start of an episode"""
-        # Initialize map with safe floor
-        self.map = np.full((self.grid_size, self.grid_size), "F")
-
-        # Place Start (S) and Exit (E)
-        self.start = (0, 0)
-        self.exit = (self.grid_size - 1, self.grid_size - 1)
-        self.map[self.start] = "S"
-        self.map[self.exit] = "E"
-
-        # Randomly place traps (T), avoiding start and exit
-        for _ in range(int(self.grid_size * 1.5)):
-            r, c = random.randint(0, self.grid_size - 1), random.randint(0, self.grid_size - 1)
-            if (r, c) not in [self.start, self.exit]:
-                self.map[r, c] = "T"
-
-        # Initialize agent position
-        self.agent_pos = list(self.start)
-
-        return tuple(self.agent_pos)
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
+        self.state = (0, 0)
+        self.traps = []
+        while len(self.traps) < self.n_traps:
+            pos = (np.random.randint(self.grid_size), np.random.randint(self.grid_size))
+            if pos != self.state and pos not in self.traps:
+                self.traps.append(pos)
+        self.goal = (self.grid_size - 1, self.grid_size - 1)
+        return self._state_to_int(self.state), {}
 
     def step(self, action):
-        """Perform an action and return new state, reward, done, info"""
-        row, col = self.agent_pos
+        row, col = self.state
+        if action == 0: row = max(row - 1, 0)
+        elif action == 1: col = min(col + 1, self.grid_size - 1)
+        elif action == 2: row = min(row + 1, self.grid_size - 1)
+        elif action == 3: col = max(col - 1, 0)
+        self.state = (row, col)
 
-        # Move agent
-        if action == 0:   # up
-            row = max(row - 1, 0)
-        elif action == 1: # down
-            row = min(row + 1, self.grid_size - 1)
-        elif action == 2: # left
-            col = max(col - 1, 0)
-        elif action == 3: # right
-            col = min(col + 1, self.grid_size - 1)
+        if self.state == self.goal:
+            reward = self.reward_goal
+            done = True
+        elif self.state in self.traps:
+            reward = self.reward_trap
+            done = True
+        else:
+            reward = self.reward_step
+            done = False
 
-        self.agent_pos = [row, col]
+        terminated = done
+        truncated = False
+        return self._state_to_int(self.state), reward, terminated, truncated, {}
 
-        tile = self.map[row, col]
-        reward, done = -0.01, False  # small step penalty
-
-        if tile == "T":  # fell into a trap
-            reward, done = -1.0, True
-        elif tile == "E":  # reached exit
-            reward, done = 1.0, True
-
-        return tuple(self.agent_pos), reward, done, {}
-
-    def render(self, mode="human"):
-        """Print the grid with the agent's position"""
-        grid = self.map.copy()
-        r, c = self.agent_pos
-        grid[r, c] = "A"  # mark agent's position
-        print("\n".join([" ".join(row) for row in grid]))
-        print()
+    def _state_to_int(self, state):
+        row, col = state
+        return row * self.grid_size + col
