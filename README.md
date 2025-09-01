@@ -68,14 +68,21 @@ Example heatmap visualization:
 
 ## 🎥 Demo  
 
-<!-- <p align="center">  
-  <img src="docs/demo.gif" width="500"/>  
-</p>   -->
+
+```bash
+python experiments/demo.py --model saved_models/mc_policy.pkl --grid_size 5 --render_delay 0.3
+```
 
 The demo shows the agent’s progression:  
 - **Episode 1:** Random policy, frequent guard detection  
 - **Episode 500:** Learns safer detours and risk avoidance  
 - **Episode 5000:** Consistently reaches the goal with minimal steps  
+
+A sample episode of the agent escaping traps:
+
+![Escape Demo](escape_demo.gif)
+
+
 ---
 
 ## 📈 Results  
