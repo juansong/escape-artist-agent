@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "escape-artist-agent"
+version = "0.1.0"
+description = "Monte Carlo and Q-Learning agents in a custom trap-filled gridworld environment."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+  { name="J. Song", email="juansong.77@gmail.com" }
+]
+requires-python = ">=3.9"
+
+dependencies = [
+  "numpy>=1.24",
+  "matplotlib>=3.7",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "black",
+  "ruff",
+  "jupyter",   # for analysis.ipynb
+  "imageio",   # for GIF
+]
+
+[tool.setuptools.packages.find]
+where = ["escape_artist"]
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

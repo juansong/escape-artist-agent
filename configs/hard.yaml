@@ -1,0 +1,24 @@
+env:
+  size: [12, 12]
+  start: [0, 0]
+  goal: [11, 11]
+  traps_pct: 0.18        # dense traps
+  r_safe: 0              # no safe zone
+  slip: 0.2              # highly stochastic
+  lethal_traps: true
+  step_cost: -0.01
+  trap_penalty: -1.0
+  goal_reward: 1.0
+  max_steps: 250
+  layout_mode: per_episode
+  seed: 999
+  obs_mode: pos
+
+algo:
+  type: mc
+  visit: first
+  episodes: 15000
+  gamma: 0.99
+  epsilon_start: 0.3
+  epsilon_end: 0.05
+  epsilon_decay_episodes: 12000

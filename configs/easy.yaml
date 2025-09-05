@@ -1,0 +1,24 @@
+env:
+  size: [6, 6]
+  start: [0, 0]
+  goal: [5, 5]
+  traps_pct: 0.05        # few traps
+  r_safe: 2              # bigger exclusion zone near start/goal
+  slip: 0.0              # deterministic actions
+  lethal_traps: true
+  step_cost: -0.01
+  trap_penalty: -1.0
+  goal_reward: 1.0
+  max_steps: 100
+  layout_mode: per_episode
+  seed: 42
+  obs_mode: pos
+
+algo:
+  type: mc
+  visit: first
+  episodes: 3000
+  gamma: 0.99
+  epsilon_start: 0.2
+  epsilon_end: 0.05
+  epsilon_decay_episodes: 2000
