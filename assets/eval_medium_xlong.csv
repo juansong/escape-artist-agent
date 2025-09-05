@@ -1,0 +1,4 @@
+method,success_rate,avg_steps_success,avg_steps_all,detection_rate
+Every-Visit MC (20k),0.0,nan,133.46,0.43
+"MC-OFF (Weighted, 30k)",0.0,nan,199.01,0.01
+Q-Learning (20k),0.245,21.775510204081634,11.545,0.755

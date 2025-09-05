@@ -79,29 +79,53 @@ def eval_policy(env: EscapeEnv, Q: np.ndarray, episodes: int, rng: np.random.Gen
 
             done = term or trunc
 
-        success = info.get("is_goal", False)
+        # success = info.get("is_goal", False)
+        # robust success check at episode end
+        x_last, y_last = info.get("pos", (None, None))
+        success = bool(info.get("is_goal", False))
+        if x_last is not None and y_last is not None:
+            from escape_artist.envs.generators import GOAL
+            success = success or (env.grid[y_last, x_last] == GOAL)
+
         n_success += int(success)
         n_detect  += int(detected)
         steps_all.append(steps)
         if success:
             steps_success.append(steps)
 
+
     eps = episodes if episodes > 0 else 1
     success_rate = n_success / eps
     detection_rate = n_detect / eps
     avg_steps_success = float(np.mean(steps_success)) if steps_success else float("nan")
     avg_steps_all = float(np.mean(steps_all)) if steps_all else float("nan")
+    timeout_rate = sum(1 for s in steps_all if s >= env.cfg.max_steps) / eps
 
     return {
         "success_rate": success_rate,
         "avg_steps_success": avg_steps_success,
         "avg_steps_all": avg_steps_all,
         "detection_rate": detection_rate,
+        "timeout_rate": timeout_rate,  # NEW
     }
 
 
-def to_markdown_table(rows: List[Dict[str, Any]]) -> str:
-    headers = ["Method", "Success Rate ↑", "Avg Steps ↓", "Detection Rate ↓"]
+# def to_markdown_table(rows: List[Dict[str, Any]]) -> str:
+#     headers = ["Method", "Success Rate ↑", "Avg Steps ↓", "Detection Rate ↓"]
+#     sep = "| " + " | ".join(["---"] * len(headers)) + " |"
+#     lines = ["| " + " | ".join(headers) + " |", sep]
+#     for r in rows:
+#         line = "| " + " | ".join([
+#             str(r["label"]),
+#             f"{r['success_rate']*100:0.1f}%",
+#             f"{r['avg_steps_success']:.1f}" if np.isfinite(r['avg_steps_success']) else "—",
+#             f"{r['detection_rate']*100:0.1f}%",
+#         ]) + " |"
+#         lines.append(line)
+#     return "\n".join(lines)
+
+def to_markdown_table(rows):
+    headers = ["Method", "Success Rate ↑", "Avg Steps ↓", "Detection Rate ↓", "Timeout Rate ↓"]
     sep = "| " + " | ".join(["---"] * len(headers)) + " |"
     lines = ["| " + " | ".join(headers) + " |", sep]
     for r in rows:
@@ -110,9 +134,11 @@ def to_markdown_table(rows: List[Dict[str, Any]]) -> str:
             f"{r['success_rate']*100:0.1f}%",
             f"{r['avg_steps_success']:.1f}" if np.isfinite(r['avg_steps_success']) else "—",
             f"{r['detection_rate']*100:0.1f}%",
+            f"{r['timeout_rate']*100:0.1f}%",
         ]) + " |"
         lines.append(line)
     return "\n".join(lines)
+
 
 
 def main():

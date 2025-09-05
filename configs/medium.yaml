@@ -1,10 +1,35 @@
+# env:
+#   size: [10, 10]
+#   start: [0, 0]
+#   goal: [9, 9]
+#   traps_pct: 0.10        # moderate trap density
+#   r_safe: 1              # smaller safe zone
+#   slip: 0.1              # stochastic actions
+#   lethal_traps: true
+#   step_cost: -0.01
+#   trap_penalty: -1.0
+#   goal_reward: 1.0
+#   max_steps: 200
+#   layout_mode: per_episode
+#   seed: 123
+#   obs_mode: pos
+
+# algo:
+#   type: mc
+#   visit: every
+#   episodes: 8000
+#   gamma: 0.99
+#   epsilon_start: 0.2
+#   epsilon_end: 0.02
+#   epsilon_decay_episodes: 6000
+
 env:
   size: [10, 10]
   start: [0, 0]
   goal: [9, 9]
-  traps_pct: 0.10        # moderate trap density
-  r_safe: 1              # smaller safe zone
-  slip: 0.1              # stochastic actions
+  traps_pct: 0.10
+  r_safe: 1
+  slip: 0.10
   lethal_traps: true
   step_cost: -0.01
   trap_penalty: -1.0
@@ -15,10 +40,42 @@ env:
   obs_mode: pos
 
 algo:
-  type: mc
-  visit: every
-  episodes: 8000
   gamma: 0.99
-  epsilon_start: 0.2
+  # Defaults used if not overridden by CLI:
+  episodes: 16000            # ↑ more episodes
+  epsilon_start: 0.35        # ↑ explore more at the start
   epsilon_end: 0.02
-  epsilon_decay_episodes: 6000
+  epsilon_decay_episodes: 15000  # ↑ slower decay
+  alpha_start: 0.5           # (Q-learning only; harmless for MC)
+  alpha_end: 0.05
+  alpha_decay_episodes: 12000
+
+
+
+# algo:
+#   type: mc
+#   episodes: 12000        # more episodes than 8000
+#   gamma: 0.99
+#   epsilon_start: 0.30    # explore more early
+#   epsilon_end: 0.02
+#   epsilon_decay_episodes: 11000  # slower decay for coverage
+
+# algo:
+#   type: mc_off
+#   episodes: 18000
+#   gamma: 0.99
+#   is_type: weighted
+#   epsilon_behavior_start: 0.30
+#   epsilon_behavior_end: 0.05
+#   epsilon_behavior_decay_episodes: 15000
+
+# algo:
+#   type: q
+#   episodes: 12000
+#   gamma: 0.99
+#   alpha_start: 0.5
+#   alpha_end: 0.05
+#   alpha_decay_episodes: 10000
+#   epsilon_start: 0.30
+#   epsilon_end: 0.02
+#   epsilon_decay_episodes: 11000
