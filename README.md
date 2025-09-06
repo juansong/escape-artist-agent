@@ -48,48 +48,59 @@ A Q-learning baseline is included for comparison.
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Structure  
 ```
 escape-artist-agent/
-  README.md
-  pyproject.toml
-  requirements.txt
-  Makefile
-  .gitignore
-  LICENSE
-  assets/
-    .gitkeep
-    README.md
-  configs/
-    easy.yaml
-    medium.yaml
-    hard.yaml
-  escape_artist/
-    __init__.py
-    envs/
-      __init__.py
-      escape_env.py
-      generators.py
-    algos/
-      __init__.py
-      mc_control.py
-      mc_offpolicy.py
-      q_learning.py
-    utils/
-      __init__.py
-      plotting.py
-  experiments/
-    run_experiment.py
-    combine_curves.py
-    make_hero_gif.py
-    make_layout_montage.py
-    ablations.py
-    analysis.ipynb   # (optional) exploration & figure generation
-  tests/
-    test_generators.py
-    test_env.py
-    test_mc.py
-    test_q_learning.py
+│
+├── README.md                         <- Portfolio README
+├── pyproject.toml                    <- Package (installable library)
+├── requirements.txt                  <- (Optional) for quick install
+├── Makefile                          <- Shortcuts (train, figures, eval, clean)
+├── .gitignore                        <- Ignore runs/ artifacts, caches, editor files
+├── LICENSE                           <- GNU license
+│
+├── assets/                           <- Curated visuals & tables used in README
+│ ├── README.md
+│ ├── .gitkeep                        <- Placeholder file
+│ └── figs/                           <- Outputs from notebook (value heatmap, rollout)
+│
+├── configs/                          <- Difficulty presets (env + algo defaults)
+│ ├── easy.yaml
+│ ├── medium.yaml
+│ └── hard.yaml
+│
+├── escape_artist/                    <- Installable Python package (envs, algos, utils)
+│ ├── init.py
+│ ├── envs/                           <- Grid env + random trap generators
+│ │ ├── init.py
+│ │ ├── escape_env.py                 <- Gymnasium-style gridworld with traps/goal/slip
+│ │ └── generators.py                 <- Layout sampling, solvability(BFS), exclusion masks
+│ ├── algos/                          <- Learning algorithms
+│ │ ├── init.py
+│ │ ├── mc_control.py                 <- On-policy MC (first/every) + greedy rollout
+│ │ ├── mc_offpolicy.py               <- Off-policy MC (importance sampling)
+│ │ └── q_learning.py                 <- Tabular Q-learning baseline
+│ └── utils/
+│ ├── init.py
+│ └── plotting.py                     <- Learning curve, value heatmap, rollout plots
+│
+├── experiments/                      <- CLI + analysis (run from repo root)
+│ ├── init.py
+│ ├── run_experiment.py               <- Train or re-plot from a saved run dir
+│ ├── evaluate.py                     <- Greedy eval → CSV + Markdown (incl. timeout rate)
+│ ├── combine_curves.py               <- Merge multiple learning curves
+│ ├── make_hero_gif.py                <- Build demo GIF from rollout PNGs
+│ ├── make_layout_montage.py          <- Tile random layouts into a montage
+│ ├── ablations.py                    <- Abalation study - parameter sweeps (traps_pct × slip)
+│ └── analysis.ipynb                  <- Optional notebook for visuals/figures
+│
+├── tests/                            <- Pytest: env invariants + learning sanity
+│ ├── test_generators.py
+│ ├── test_env.py
+│ ├── test_mc.py
+│ └── test_q_learning.py
+│
+└── runs/                             <- Training outputs (gitignored; artifacts + figs/)
 
 ```
 ---
@@ -145,30 +156,28 @@ make figures
 
 ## 📊 Results
 
-### Hero GIF
+### **Greedy rollout paths** (Successful / Failed)
 
 <p align="center">
-  <img src="assets/escape-artist-hero.gif" alt="Greedy policy rollouts across random trap layouts" width="720">
+    <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
+    <img src="assets/rollout_failed.gif"  alt="Failed greedy rollout on a fixed layout"     width="360">
 </p>
 <p align="center"><em>Greedy policy rollouts across random trap layouts (easy / medium / hard).</em></p>
 
 ***Evaluation setup**:
  Unless noted otherwise we use `configs/medium.yaml`, `layout_mode=per_episode`, and evaluate greedy rollouts from learned Q-tables over 200 randomized layouts. “Detection” means the agent stepped on any trap at least once during an episode. Raw numbers are saved to <code>assets/eval_medium.csv</code> for reproducibility.
 
-**Note.** Results emphasize **generalization**: we evaluate on **per-episode randomized layouts** (no map memorization). Medium uses 10×10 grids, 10% traps, 10% slip, lethal traps. Failures are mostly trap hits; timeouts are reported explicitly.
+***Note** Results emphasize **generalization**: we evaluate on **per-episode randomized layouts** (no map memorization). Medium uses 10×10 grids, 10% traps, 10% slip, lethal traps. Failures are mostly trap hits; timeouts are reported explicitly.
 
 ### Evaluation metrics — Easy
 
 *(6×6, per-episode, lethal traps; 200 randomized layouts; greedy rollouts from learned Q)*
 
-<!-- BEGIN:EVAL_TABLE_EASY -->
 <!-- Paste the contents of assets/eval_easy.md below this line -->
-<!-- Example:
 | Method | Success Rate ↑ | Avg Steps ↓ | Detection Rate ↓ | Timeout Rate ↓ |
 | --- | --- | --- | --- | --- |
 | MC (First) | 91.5% | 10.0 | 8.5% | 0.0% |
 | Q-Learning | 88.0% | 10.0 | 12.0% | 0.0% |
--->
 <!-- END:EVAL_TABLE_EASY -->
 
 [Raw CSV](assets/eval_easy.csv)
@@ -179,6 +188,11 @@ make figures
 
 *(10×10, per-episode, 10% traps, 10% slip, lethal; 200 randomized layouts; greedy rollouts from learned Q)*
 
+| Method | Success Rate ↑ | Avg Steps ↓ | Detection Rate ↓ |
+| --- | --- | --- | --- |
+| Every-Visit MC (12k) | 21.5% | 19.4 | 78.5% |
+| MC-OFF (Weighted, 18k) | 20.5% | 19.8 | 79.5% |
+| Q-Learning (12k) | 23.0% | 20.6 | 77.0% |
 
 
 [Raw CSV](assets/eval_medium.csv)
@@ -276,109 +290,8 @@ Covers:
 
 
 
-## 📂 Project Structure  
-```
-escape-artist-agent/
-│
-├── README.md                                             <- Portfolio README
-├── pyproject.toml                                        <- Package (installable library)
-├── requirements.txt                                     # (optional) pinned deps for quick install
-├── Makefile                                            # Shortcuts (train, figures, eval, clean)
-├── .gitignore                                           # Ignore runs/ artifacts, caches, editor files
-├── LICENSE                                               # GNU license
-│
-├── assets/                                             # Curated visuals & tables used in README
-│ ├── README.md
-│ ├── .gitkeep
-│ └── figs/                                             # Overlays from notebook (value heatmap, rollout)
-│
-├── configs/                                            # Difficulty presets (env + algo defaults)
-│ ├── easy.yaml
-│ ├── medium.yaml
-│ └── hard.yaml
-│
-├── escape_artist/                                      # Installable Python package (envs, algos, utils)
-│ ├── init.py
-│ ├── envs/                                             # Grid env + random-trap generators
-│ │ ├── init.py
-│ │ ├── escape_env.py                       # Gym-style gridworld with traps/goal/slip
-│ │ └── generators.py                        # Layout sampling, solvability (BFS), exclusion masks
-│ ├── algos/ # Learning algorithms
-│ │ ├── init.py
-│ │ ├── mc_control.py                         # On-policy MC (first/every) + greedy rollout
-│ │ ├── mc_offpolicy.py                             # Off-policy MC (importance sampling)
-│ │ └── q_learning.py                         # Tabular Q-learning baseline
-│ └── utils/
-│ ├── init.py
-│ └── plotting.py               # Learning curve, value heatmap, rollout plots
-│
-├── experiments/                # CLI + analysis (run from repo root)
-│ ├── init.py
-│ ├── run_experiment.py                 # Train or re-plot from a saved run dir
-│ ├── evaluate.py               # Greedy eval → CSV + Markdown (incl. timeout rate)
-│ ├── combine_curves.py                 # Merge multiple learning curves
-│ ├── make_hero_gif.py              # Build demo GIF from rollout PNGs
-│ ├── make_layout_montage.py                # Tile random layouts into a montage
-│ ├── ablations.py              # Optional parameter sweeps (traps_pct × slip)
-│ └── analysis.ipynb                # Optional notebook for visuals/figures
-│
-├── tests/                      # Pytest: env invariants + learning sanity
-│ ├── test_generators.py
-│ ├── test_env.py
-│ ├── test_mc.py
-│ └── test_q_learning.py
-│
-├── .github/
-│ └── workflows/
-│ └── ci.yml                    # (optional) CI: run tests on push/PR
-│
-└── runs/                       # Training outputs (gitignored; artifacts + figs/)
 
 
-escape-artist-agent/
-│
-├── README.md                         <- Full portfolio README (intro, usage, demo, results)
-├── requirements.txt                  <- All dependencies with tested versions
-│
-├── environment/
-│   ├── __init__.py
-│   ├── escape_env.py                 <- Custom Escape environment with random traps
-│   ├── utils.py                      <- Helpers: reward shaping, map loading
-│   └── maps/                         <- ASCII/JSON maps
-│
-├── agent/
-│   ├── __init__.py
-│   ├── monte_carlo.py                <- First-Visit Monte Carlo agent
-│   ├── policies.py                   <- ε-soft policies, greedy updates
-│   └── importance_sampling.py        <- Off-policy Monte Carlo methods
-│
-├── experiments/
-│   ├── __init__.py
-│   ├── train_mc.py                   <- Training script (saves Q-table + training log)
-│   ├── evaluate.py                   <- Policy evaluation script
-│   ├── ablations.py                  <- Comparisons: MC vs Q-learning
-│   └── config.yaml                   <- Hyperparameters
-│
-├── notebooks/
-│   ├── analysis.ipynb                <- Plot training curves, average returns
-│   └── q_heatmaps.ipynb              <- Visualize Q(s,a) heatmaps
-│
-├── logs/                             <- Automatically saved during training
-│   ├── mc_training_log.csv           <- Episode rewards per MC run
-│   ├── mc_q_table.pkl                <- MC Q-values
-│   ├── mc_trajectories.pkl           <- Stored trajectories
-│   ├── qlearning_training_log.csv    <- Q-Learning rewards
-│   └── qlearning_q_table.pkl         <- Q-Learning Q-values
-│
-├── docs/                             <- Portfolio visuals
-│   ├── training_rewards.png          <- Reward curve example
-│   ├── escape_demo.gif               <- Demo GIF of trained agent
-│   └── dependency_graph.png          <- Module dependency graph
-│
-├── scripts/
-│   └── generate_dependency_graph.py  <- Generate dependency graph
-│
-└── demo.py                           <- Run trained agent and generate GIF
 ```
 
 --------
