@@ -288,10 +288,4 @@ Covers:
 ## 📂 Documentation
 - **[Full CLI walkthrough](docs/CLI_WALKTHROUGH.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
 
-
-
-
-
-```
-
 --------

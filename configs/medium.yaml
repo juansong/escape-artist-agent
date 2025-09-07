@@ -27,9 +27,9 @@ env:
   size: [10, 10]
   start: [0, 0]
   goal: [9, 9]
-  traps_pct: 0.10
-  r_safe: 1
-  slip: 0.10
+  traps_pct: 0.10         # medium trap density
+  r_safe: 1               # medium safe zone
+  slip: 0.10              # some determinitic actions
   lethal_traps: true
   step_cost: -0.01
   trap_penalty: -1.0

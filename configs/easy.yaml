@@ -3,8 +3,8 @@ env:
   start: [0, 0]
   goal: [5, 5]
   traps_pct: 0.05        # few traps
-  r_safe: 2              # bigger exclusion zone near start/goal
-  slip: 0.0              # deterministic actions
+  r_safe: 2              # bigger exclusion (safe) zone near start/goal
+  slip: 0.0              # no deterministic actions
   lethal_traps: true
   step_cost: -0.01
   trap_penalty: -1.0

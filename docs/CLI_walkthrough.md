@@ -26,7 +26,7 @@ python -m pytest -q
 ```
 ---
 
-## 2) Train `Easy` baselines
+## 2) Train Easy baselines
 
 MC First-Visit (easy)
 
@@ -43,7 +43,7 @@ python -m experiments.run_experiment --algo q \
 ```
 ---
 
-## 3) Evaluaate `Easy` (generates CSV + table)
+## 3) Evaluaate Easy (generates CSV + table)
 
 ```bash
 python -m experiments.evaluate \
@@ -54,7 +54,7 @@ python -m experiments.evaluate \
 ```
 ---
 
-## 4) Train `Medium` baselines
+## 4) Train Medium baselines
 
 MC Every-Visit
 
@@ -78,7 +78,7 @@ python -m experiments.run_experiment --algo q \
 ```
 ---
 
-## 5) Evaluate `Medium`
+## 5) Evaluate Medium
 
 ```bash
 python -m experiments.evaluate \
@@ -98,9 +98,9 @@ python -m experiments.run_experiment --plot --from runs/q_medium_long
 ```
 ---
 
-## 7) Create README figures (`assets/`)
+## 7) Create README figures (assets/)
 
-A) Combined learning curves (`Medium`)
+A) Combined learning curves (Medium)
 
 ```bash
 python -m experiments.combine_curves \
