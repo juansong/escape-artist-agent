@@ -100,6 +100,8 @@ escape-artist-agent/
 │ ├── test_mc.py
 │ └── test_q_learning.py
 │
+├── docs/                             <- CLI walkthrough & code tour
+│
 └── runs/                             <- Training outputs (gitignored; artifacts + figs/)
 
 ```
@@ -164,10 +166,11 @@ make figures
 </p>
 <p align="center"><em>Greedy policy rollouts across random trap layouts (easy / medium / hard).</em></p>
 
-***Evaluation setup**:
- Unless noted otherwise we use `configs/medium.yaml`, `layout_mode=per_episode`, and evaluate greedy rollouts from learned Q-tables over 200 randomized layouts. “Detection” means the agent stepped on any trap at least once during an episode. Raw numbers are saved to <code>assets/eval_medium.csv</code> for reproducibility.
+#### ***Evaluation setup**:
+Unless noted otherwise we use `configs/medium.yaml`, `layout_mode=per_episode`, and evaluate greedy rollouts from learned Q-tables over 200 randomized layouts. “Detection” means the agent stepped on any trap at least once during an episode. Raw numbers are saved to <code>assets/eval_medium.csv</code> for reproducibility.
 
-***Note** Results emphasize **generalization**: we evaluate on **per-episode randomized layouts** (no map memorization). Medium uses 10×10 grids, 10% traps, 10% slip, lethal traps. Failures are mostly trap hits; timeouts are reported explicitly.
+#### ***Note** 
+Results emphasize **generalization**. We evaluate on **per-episode randomized layouts** (no map memorization). Medium uses 10×10 grids, 10% traps, 10% slip, lethal traps. Failures are mostly trap hits; timeouts are reported explicitly.
 
 ### Evaluation metrics — Easy
 
