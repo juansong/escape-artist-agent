@@ -156,7 +156,7 @@ make figures
 
 ## 📊 Results
 
-### **Greedy rollout paths** (Successful / Failed)
+### **Greedy rollout paths GIF** (Successful vs. Failed)
 
 <p align="center">
     <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
