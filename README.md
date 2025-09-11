@@ -1,8 +1,10 @@
 # 🎮 Escape Artist Agent
 
 An implementation of Monte Carlo Control for a custom escape-tactics gridworld.
-The agent learns to dodge randomly placed traps and navigate uncertain environments to reach the extraction point through trial and error.
-This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be applied to game AI design, with Q-learning baseline for comparison.
+The agent learns to dodge randomly placed <span style="background-color: yellow;">traps</span> and navigate uncertain environments 
+to reach the <span style="background-color: blue;"> extraction point</span> through trial and error.
+This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be applied to game AI design, 
+with Q-learning baseline for comparison.
 
 <p align="center">
     <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
