@@ -98,7 +98,7 @@ escape-artist-agent/
 │ ├── make_hero_gif.py                <- Build demo GIF from rollout PNGs
 │ ├── make_layout_montage.py          <- Tile random layouts into a montage
 │ ├── ablations.py                    <- Abalation study - parameter sweeps (traps_pct × slip)
-│ └── analysis.ipynb                  <- Optional notebook for visuals/figures
+│ └── analysis.ipynb                  <- Motebook for deeper analysis (visuals/figures)
 │
 ├── tests/                            <- Pytest: env invariants + learning sanity
 │ ├── test_generators.py
@@ -216,6 +216,18 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 ### Layout diversity (per-episode sampling)
 
 <img src="assets/layout_montage.png" alt="Montage of random trap layouts with goal marker" width="720">
+
+---
+
+### Policy behavior by algorithm (same fixed layout)
+
+<p align="left">
+  <img src="assets/compare_mc_every.gif" alt="MC (Every-Visit) on shared layout" width="240">
+  <img src="assets/compare_mc_off.gif"   alt="MC-OFF (Weighted IS) on shared layout" width="240">
+  <img src="assets/compare_q_learning.gif" alt="Q-Learning on shared layout" width="240">
+</p>
+
+*Same map & seed (`per_env`); differences reflect policy behavior, not the layout.*
 
 ---
 

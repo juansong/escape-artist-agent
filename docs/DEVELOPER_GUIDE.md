@@ -344,6 +344,7 @@ Notebook features:
 - Render value heatmap + greedy arrows and a greedy rollout on a fixed layout.
 - Preview ablation CSVs → heatmaps.
 - Build animated success/failure rollout GIFs via make_hero_gif.py.
+- Render greedy rollout policy behavior by algorithm on a fixed layout.
 
 Inputs:
   - Existing run folders with `Q.npy` and `returns.npy` (e.g., `runs/mc_every_medium`, `runs/q_medium`).
@@ -354,6 +355,7 @@ Outputs:
   - `assets/figs/value_heatmap_policy.png`
   - `assets/figs/greedy_rollout.png`
   - `assets/rollout_success.gif`, `assets/rollout_failed.gif` (via `make_hero_gif.py`)
+  - 'assets/compare_mc_every.gif`, `assets/compare_mc_off.gif`, `assets/compare_q_learning.gif`
   - `assets/ablations_*.png` and ablation CSV preview
 
 > First cell bootstraps %pip install -e .[dev] into the kernel and normalizes CWD. <br>
