@@ -200,14 +200,16 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 ---
 
 ### Learning curves (medium)
-
-<img src="assets/curve_medium_mc_mc-off_q.png" alt="Learning curves: MC (Every), MC-OFF (Weighted), Q-Learning on medium" width="720">
-
+<p align="center">
+    <img src="assets/curve_medium_mc_mc-off_q.png" alt="Learning curves: MC (Every), MC-OFF (Weighted), Q-Learning on medium" width="720">
+</p>
 ---
 
 ### Value map & greedy policy (fixed layout)
 
-<img src="assets/figs/value_heatmap_policy.png" alt="Value heatmap and greedy arrows on a fixed layout" width="420">
+<p align="center">
+    <img src="assets/figs/value_heatmap_policy.png" alt="Value heatmap and greedy arrows on a fixed layout" width="420">
+</p>
 
 *(Generated on a fixed layout for readability; see `analysis.ipynb`.)*
 
@@ -215,17 +217,20 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 
 ### Layout diversity (per-episode sampling)
 
-<img src="assets/layout_montage.png" alt="Montage of random trap layouts with goal marker" width="720">
+<p align="center">
+    <img src="assets/layout_montage.png" alt="Montage of random trap layouts with goal marker" width="720">
+</p>
 
 ---
 
 ### Policy behavior by algorithm (same fixed layout)
 
-<p align="left">
+<p align="center">
   <img src="assets/compare_mc_every.gif" alt="MC (Every-Visit) on shared layout" width="240">
   <img src="assets/compare_mc_off.gif"   alt="MC-OFF (Weighted IS) on shared layout" width="240">
   <img src="assets/compare_q_learning.gif" alt="Q-Learning on shared layout" width="240">
 </p>
+<p align="center"><em>Policy behavior by algorithms (MC/MC-OFF/Q-Learning).</em></p>
 
 *Same map & seed (`per_env`); differences reflect policy behavior, not the layout.*
 
@@ -235,12 +240,13 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 
 Success rate versus **trap density** × **slip**.
 
-<table>
+<table style="margin-left: auto; margin-right: auto">
 <tr>
 <td><img src="assets/ablations_heatmap_mc.png" alt="MC Every-Visit ablation heatmap" width="360"></td>
 <td><img src="assets/ablations_heatmap_q.png" alt="Q-Learning ablation heatmap" width="360"></td>
 </tr>
 </table>
+
 
 ---
 
