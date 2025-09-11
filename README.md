@@ -106,7 +106,7 @@ escape-artist-agent/
 │ ├── test_mc.py
 │ └── test_q_learning.py
 │
-├── docs/                             <- CLI walkthrough & Developer guide
+├── docs/                             <- CLI walkthrough + Developer guide + Portfolio PPT
 └── runs/                             <- Training outputs (gitignored; artifacts + figs/)
 
 ```
@@ -275,7 +275,7 @@ python -m experiments.make_layout_montage \
 
 ## 🧪 Tests
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
 Covers:

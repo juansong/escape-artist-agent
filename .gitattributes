@@ -1,1 +1,1 @@
-    *.ipynb linguist-vendored
+    *.ipynb linguist-vendored  # added to ignore jupyter notebook files when calculating repository language statistics.
