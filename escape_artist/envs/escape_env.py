@@ -37,8 +37,17 @@ from .generators import sample_trap_layout, TRAP, GOAL
 class EscapeEnv:
     """
     Minimal Gymnasium-style environment for the Escape Artist gridworld.
-    Observations: (x, y) if obs_mode == 'pos' (np.int32)
-    Actions: 0=up, 1=right, 2=down, 3=left
+
+    Args(constructor):
+        cfg: EnvConfig
+
+    Attributes: 
+        h, w: int, grid: np.ndarray, agent_pos: (x,y), action_space.n==4, _layout_id: int
+
+    Methods:
+        _validate() — internal assertions (sizes, bounds, ranges)
+        _generate_layout() — internal; creates grid via sample_trap_layout.
+        _obs_from_pos(pos) — returns observation [x, y] as np.int32.
     """
     metadata: Dict[str, Any] = {}
 
@@ -96,6 +105,16 @@ class EscapeEnv:
 
     # ------------------------------- API -------------------------------
     def reset(self, seed: Optional[int] = None):
+        '''
+        Creates a fresh layout if layout_mode="per_episode" (or first call). Resets agent to start.
+        info contains "pos", "is_trap", "is_goal", "layout_id".
+
+        Args:
+            seed (int|None): optional RNG reseed for this reset.
+            
+        Returns:
+            info (dict): {"pos": (x,y), "is_trap": bool, "is_goal": bool, "layout_id": int}.
+        '''
         if seed is not None:
             self.rng = np.random.default_rng(seed)
         # New layout each episode in per_episode mode
@@ -115,6 +134,18 @@ class EscapeEnv:
         return obs, info
 
     def step(self, action: int):
+        '''
+        Clips movement to grid. Applies slip; sets trap/goal flags.
+
+        Args:
+            action (int): {0:up, 1:right, 2:down, 3:left} (with slip applied).
+        Returns:
+            obs (np.ndarray[int32]): [x, y] after move.
+            reward (float): step_cost + (optional penalties/rewards).
+            terminated (bool): reached goal or lethal trap.
+            truncated (bool): time limit exceeded.
+            info (dict): includes "pos", "is_trap", "is_goal", "layout_id".
+        '''
         self._steps += 1
         # slip handling
         if self.rng.random() < self.cfg.slip:

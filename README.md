@@ -1,11 +1,16 @@
 # 🎮 Escape Artist Agent
 
+<p align="center">
+    <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
+    <img src="assets/rollout_failed.gif"  alt="Failed greedy rollout on a fixed layout"     width="360">
+</p>
+<p align="center"><em>Greedy policy rollouts across random trap layouts (successful/failed).</em></p>
+
 An implementation of Monte Carlo Control for a custom escape-tactics gridworld.
 The agent learns to dodge randomly palced traps and navigate uncertain environments to reach the extraction point through trial and error.
 
-This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be appl9ied to game AI design,
+This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be applied to game AI design,
 A Q-learning baseline is included for comparison.
-
 ---
 
 ## 🚀 Features
@@ -100,8 +105,7 @@ escape-artist-agent/
 │ ├── test_mc.py
 │ └── test_q_learning.py
 │
-├── docs/                             <- CLI walkthrough & code tour
-│
+├── docs/                             <- CLI walkthrough & Developer guide
 └── runs/                             <- Training outputs (gitignored; artifacts + figs/)
 
 ```
@@ -158,15 +162,7 @@ make figures
 
 ## 📊 Results
 
-### **Greedy rollout paths GIF** (Successful vs. Failed)
-
-<p align="center">
-    <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
-    <img src="assets/rollout_failed.gif"  alt="Failed greedy rollout on a fixed layout"     width="360">
-</p>
-<p align="center"><em>Greedy policy rollouts across random trap layouts (easy / medium / hard).</em></p>
-
-#### ***Evaluation setup**:
+#### ***Evaluation setup**
 Unless noted otherwise we use `configs/medium.yaml`, `layout_mode=per_episode`, and evaluate greedy rollouts from learned Q-tables over 200 randomized layouts. “Detection” means the agent stepped on any trap at least once during an episode. Raw numbers are saved to <code>assets/eval_medium.csv</code> for reproducibility.
 
 #### ***Note** 

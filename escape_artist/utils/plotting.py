@@ -25,9 +25,11 @@ def _save_fig(fig: plt.Figure, out_path: Path):
 
 def compute_V_and_policy(Q: np.ndarray, rng: Optional[np.random.Generator] = None) -> Tuple[np.ndarray, np.ndarray]:
     """
+    Args:
+        Q (np.ndarray): shape (H*W,4).
     Returns:
-      V: (nS,) where V[s] = max_a Q[s, a]
-      A: (nS,) greedy action indices with uniform tie-breaking
+        V (np.ndarray): shape (H*W,4), where V[s] = max_a Q[s,a].
+        greedy (np.ndarray): shape (H*W,) - argmax_a Q[s,a].
     """
     if rng is None:
         rng = np.random.default_rng()
@@ -44,8 +46,15 @@ def compute_V_and_policy(Q: np.ndarray, rng: Optional[np.random.Generator] = Non
 
 def plot_learning_curve(returns: np.ndarray, out_dir: Path) -> Path:
     """
-    Plot episodic returns vs. episodes.
-    Saves to <out_dir>/figs/learning_curve.png and returns the path.
+    Plots episodic returns vs. episodes.
+    Saves "learning_curve.png" under "<out_dir>/figs/".
+    
+    Args:
+        returns (np.ndarray): per-episode returns.
+        out_dir (Pathlike): run or assets directory.
+        title (str)
+    Returns:
+        path (Path)
     """
     fig = plt.figure(figsize=(6, 4))
     xs = np.arange(1, len(returns) + 1)
@@ -62,10 +71,14 @@ def plot_learning_curve(returns: np.ndarray, out_dir: Path) -> Path:
 
 def plot_value_heatmap_and_policy(env, Q: np.ndarray, out_dir: Path, title: str = "V(s) & Greedy Policy") -> Path:
     """
-    Draw V(s) as a heatmap and overlay greedy-policy arrows over the env's current layout.
+    Draws V(s) as a heatmap and overlay greedy-policy arrows over the env's current layout.
+    Assumes env has attributes "h", "w", "grid (with TRAP=1, GOAL=2)".
+    Saves "value_heatmap_policy.png" showing "V(s)" heatmap and greedy arrows.
 
-    Assumes:
-      - env has attributes h, w, grid (with TRAP=1, GOAL=2)
+    Args:
+        env (EscapeEnv), Q (np.ndarray), out_dir (Pathlike), title (str)
+    Returns:
+        path (Path): to "figs/value_heatmap_policy.png".
     """
     h, w = env.h, env.w
     grid = env.grid.copy()
@@ -109,15 +122,16 @@ def plot_value_heatmap_and_policy(env, Q: np.ndarray, out_dir: Path, title: str 
 
 def plot_greedy_rollout(env, Q: np.ndarray, greedy_rollout_fn, out_dir: Path, max_steps: Optional[int] = None) -> Path:
     """
-    Plot a single greedy rollout trajectory over the env's current layout.
+    Plots a single greedy rollout trajectory over the env's current layout.
+    Saves "greedy_rollout.png". All images land in "<out_dir>/figs/".
 
     Args:
-      env: your EscapeEnv (needs .grid, .h, .w, .cfg.max_steps)
-      Q:   tabular Q-table (nS x nA)
-      greedy_rollout_fn: callable(env, Q, max_steps) -> (total_return: float, traj: [(x,y), ...])
-      max_steps: optional rollout cap
-
-    Saves to <out_dir>/figs/greedy_rollout.png and returns the path.
+        env (EscapeEnv), Q (np.ndarray).
+        greedy_policy_rollout (callable): function from "mc_control".
+        out_dir (Pathlike)
+        max_steps (int)
+    Returns:
+        path (Path): to "figs/greedy_rollout.png".
     """
     total, traj = greedy_rollout_fn(env, Q, max_steps=max_steps if max_steps is not None else env.cfg.max_steps)
     grid = env.grid.copy()

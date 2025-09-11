@@ -151,8 +151,15 @@ def train_mc_offpolicy(env, cfg: OffMCConfig) -> Tuple[np.ndarray, List[float]]:
         N[s,a] += 1
         Q[s,a] += (W*G - Q[s,a]) / N[s,a]
 
-    As in Sutton & Barto (Fig. 5.6), the update proceeds backward through the episode
+    As in Sutton & Barto, the update proceeds backward through the episode
     and *breaks* once the taken action is not greedy under the current Q.
+
+    Args:
+        env (EscapeEnv).
+        cfg (OffMCConfig).
+    Returns:
+        Q (np.ndarray): shape (H*W,4).
+        returns (np.ndarray[episodes]).
     """
     assert cfg.is_type in ("weighted", "ordinary")
 

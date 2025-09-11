@@ -9,7 +9,16 @@ TRAP  = 1
 GOAL  = 2
 
 def exclusion_mask(size: Tuple[int,int], start: Tuple[int,int], goal: Tuple[int,int], r_safe: int) -> np.ndarray:
-    """Return boolean mask True where traps are NOT allowed (square/Chebyshev radius)."""
+    """
+    Purpose: Mark a Chebyshev square around start/goal where traps are disallowed.
+    Args: 
+        size=(H,W) - (H,W) grid size.
+        (start_x,start_y) - (x,y) start.
+        (goal_x,goal_y) - (x.y) goal.
+        r_safe:int - Chebyshev radius where traps are disallowed around start/goal.
+    Returns: 
+        mask: np.ndarray[bool] of shape (H, W), True where traps are not allowed
+    """
     H, W = size
     sx, sy = start
     gx, gy = goal
@@ -22,7 +31,14 @@ def exclusion_mask(size: Tuple[int,int], start: Tuple[int,int], goal: Tuple[int,
     return mask
 
 def path_exists_bfs(grid: np.ndarray, start: Tuple[int,int], goal: Tuple[int,int]) -> bool:
-    """Check 4-neighbor path exists from start to goal avoiding TRAP cells."""
+    """
+    Purpose: Ensures a path (4-neighbor) exists from start to goal avoiding traps.
+    Args:
+        grid: np.ndarray[int] - (H, W) with cell types {EMPTY=0, TRAP=1, GOAL=2}.
+        start, goal: tuple[int,int] — (x, y) positions.
+    Returns:
+        bool: True if a 4-connected, trap-free path exists start -> goal.
+    """
     H, W = grid.shape
     sx, sy = start
     gx, gy = goal
@@ -54,9 +70,16 @@ def sample_trap_layout(rng: np.random.Generator,
                        r_safe: int,
                        max_resample: int = 50) -> np.ndarray:
     """
-    Sample a grid with traps according to density, enforcing exclusion around start/goal,
-    and resample until a path exists between start and goal (up to max_resample).
-    Returns grid with values {EMPTY, TRAP, GOAL}.
+    Purpose: Generate a random layout that (a) respects exclusion zones, (b) is solvable.
+    Behavior: Samples traps by Bernoulli(traps_pct) outside exclusions, sets GOAL, resamples until BFS-solvable (or gives a trap-sparse fallback).
+    Args: 
+        rng: np.random.Generator
+        size: (H, W), start: (x, y), goal: (x, y)
+        traps_pct: float — Bernoulli prob for trap placement (outside exclusions).
+        r_safe: int — exclusion radius.
+        max_resample: int — retries until solvable.
+    Returns:
+        - grid: np.ndarray[int8] with {EMPTY, TRAP, GOAL}, solvable per BFS (or trap-sparse fallback after retries).
     """
     H, W = size
     sx, sy = start

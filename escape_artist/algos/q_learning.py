@@ -73,7 +73,14 @@ def _save(out_dir: str, Q: np.ndarray, returns: List[float], cfg: QLConfig):
 def train_q_learning(env, cfg: QLConfig) -> Tuple[np.ndarray, List[float]]:
     """
     Tabular Q-Learning with linear ε/α schedules and uniform tie-breaking.
-    Returns (Q, episodic_returns).
+    Core: TD updates `Q[s,a] += α (r + γ max_a' Q[s',a'] − Q[s,a])`.
+
+    Args:
+        env (EscapeEnv).
+        cfg (QLConfig).
+    Returns: 
+        Q (np.ndarray): shape (H*W,4).
+        returns (np.ndarray[episodes]).
     """
     rng = np.random.default_rng(cfg.seed)
 

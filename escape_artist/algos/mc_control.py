@@ -124,7 +124,15 @@ def generate_episode(
 def train_mc_control(env, cfg: MCConfig) -> Tuple[np.ndarray, List[float]]:
     """
     Monte Carlo control (on-policy) with First-Visit or Every-Visit updates.
-    Returns (Q, episodic_returns).
+    Loop: For each episode, roll out with ε-soft policy, compute returns `G_t`, update `Q` by visit rule.
+    Outputs: `Q.npy`-ready array; per-episode returns (for curves).
+
+    Args:
+        env (EscapeEnv): tabular grid env.
+        cfg (MCConfig)
+    Returns:
+        Q (np.ndarray): shape (H*W, 4).
+        returns (np.ndarray[episodes]): episodic returns for plotting.
     """
     assert cfg.visit in ("first", "every"), "cfg.visit must be 'first' or 'every'"
 
@@ -189,6 +197,13 @@ def train_mc_control(env, cfg: MCConfig) -> Tuple[np.ndarray, List[float]]:
 def greedy_policy_rollout(env, Q: np.ndarray, max_steps: Optional[int] = None) -> Tuple[float, List[Tuple[int, int]]]:
     """
     Rollout using greedy policy w.r.t. Q and return (total_return, trajectory of positions).
+
+    Args:
+        env (EscapeEnv)
+        Q (np.ndarray): shape (H*W, 4).
+    Returns:
+        G (float): total discounted return along the trajectory.
+        traj (list[(x,y)]): visited positions step-by-step.
     """
     obs, info = env.reset()
     h, w = env.h, env.w

@@ -96,7 +96,7 @@ Gymnasium API.
       - `info: dict` — includes `pos`, `is_trap`, `is_goal`, `layout_id`.
 ---
 
-## **`escape_artist/envs/algos/mc_control.py`**
+## **`escape_artist/algos/mc_control.py`**
 On-policy Monte Carlo control (First-Visit / Every-Visit) with ε-soft behavior.
 
 #### **`@dataclass MCConfig`**

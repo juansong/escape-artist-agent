@@ -12,6 +12,16 @@ def load_returns(run_dir: Path) -> np.ndarray:
     return np.load(p)
 
 def main():
+    '''
+    Merge multiple `returns.npy` series (learning curves) into a single PNG.
+    
+    Args:
+        "--runs DIR ...": each must contain "returns.npy".
+        "--labels STR ...": one label per run.
+        "--out PATH": output PNG (e.g., "assets/curve_*.png").
+    Returns / Artifacts:
+        Combined curves saved to "--out".
+    '''
     ap = argparse.ArgumentParser(description="Combine learning curves from multiple runs")
     ap.add_argument("--runs", nargs="+", required=True,
                     help="Run folders (each must contain returns.npy). Order = legend order.")
