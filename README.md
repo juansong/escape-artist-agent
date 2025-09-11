@@ -1,16 +1,15 @@
 # 🎮 Escape Artist Agent
 
+An implementation of Monte Carlo Control for a custom escape-tactics gridworld.
+The agent learns to dodge randomly palced traps and navigate uncertain environments to reach the extraction point through trial and error.
+This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be applied to game AI design, with Q-learning baseline for comparison.
+
 <p align="center">
     <img src="assets/rollout_success.gif" alt="Successful greedy rollout on a fixed layout" width="360">
     <img src="assets/rollout_failed.gif"  alt="Failed greedy rollout on a fixed layout"     width="360">
 </p>
-<p align="center"><em>Greedy policy rollouts across random trap layouts (successful/failed).</em></p>
+<p align="center"><em>Greedy policy rollouts across random trap layouts - medium difficulty (successful/failed).</em></p>
 
-An implementation of Monte Carlo Control for a custom escape-tactics gridworld.
-The agent learns to dodge randomly palced traps and navigate uncertain environments to reach the extraction point through trial and error.
-
-This project demonstrates how reinforcement learning (RL) - specifically on/off policy Monte Carlo methods - can be applied to game AI design,
-A Q-learning baseline is included for comparison.
 ---
 
 ## 🚀 Features
@@ -286,5 +285,7 @@ Covers:
 
 ## 📂 Documentation
 - **[Full CLI walkthrough](docs/CLI_WALKTHROUGH.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - full docstrings and additional notes.
+- **[PPT](docs/underprogress.pptx)** - portfolio ppt.
 
 --------
