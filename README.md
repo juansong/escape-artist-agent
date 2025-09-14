@@ -12,6 +12,8 @@ with Q-learning baseline for comparison.
 </p>
 <p align="center"><em>Greedy policy rollouts across random trap layouts (successful/failed runs).</em></p>
 
+**[Portfolio PPT](docs/Portfolio_PPT.pptx)**
+
 ---
 
 ## 🚀 Features
@@ -199,7 +201,7 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 
 ---
 
-### Learning curves (medium)
+### Learning curves (medium, smoothed)
 <p align="center">
     <img src="assets/curve_medium_mc_mc-off_q.png" alt="Learning curves: MC (Every), MC-OFF (Weighted), Q-Learning on medium" width="720">
 </p>
@@ -285,7 +287,7 @@ python -m experiments.make_layout_montage \
 ## 📒 Notebooks
 
 `experiments/analysis.ipynb` enables:
-- combine learning curves
+- deeper dive into evaluations (learning curves, policy performance, etc.)
 - render value heatmaps + rollouts on a fixed layout
 - preview ablation CSVs
 
@@ -306,6 +308,6 @@ Covers:
 ## 📂 Documentation
 - **[Full CLI walkthrough](docs/CLI_WALKTHROUGH.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - full docstrings and additional notes.
-- **[PPT](docs/underprogress.pptx)** - portfolio ppt.
+- **[Portfolio PPT](docs/Portfolio_PPT.pptx)** - portfolio ppt.
 
 --------
