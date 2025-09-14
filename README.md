@@ -12,7 +12,7 @@ with Q-learning baseline for comparison.
 </p>
 <p align="center"><em>Greedy policy rollouts across random trap layouts (successful/failed runs).</em></p>
 
-**[Portfolio PPT](docs/Portfolio_PPT.pptx)**
+**[Portfolio PPTX](docs/Portfolio_PPTX.pptx)**
 
 ---
 
@@ -308,6 +308,6 @@ Covers:
 ## 📂 Documentation
 - **[Full CLI walkthrough](docs/CLI_WALKTHROUGH.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - full docstrings and additional notes.
-- **[Portfolio PPT](docs/Portfolio_PPT.pptx)** - portfolio ppt.
+- **[Portfolio PPTX](docs/Portfolio_PPTX.pptx)** - portfolio ppt.
 
 --------
