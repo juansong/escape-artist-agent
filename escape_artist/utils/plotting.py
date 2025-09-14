@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Dict, Iterable
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,6 +20,18 @@ def _save_fig(fig: plt.Figure, out_path: Path):
     fig.savefig(out_path, bbox_inches="tight", dpi=150)
     plt.close(fig)
 
+
+def _movavg(x: np.ndarray, window: int) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Simple moving average with a clean x-axis starting at 0 (no staggering).
+    Returns (y_smooth, x_indices).
+    """
+    x = np.asarray(x, dtype=float)
+    if window <= 1 or len(x) < window:
+        return x.copy(), np.arange(len(x))
+    y = np.convolve(x, np.ones(window, dtype=float) / float(window), mode="valid")
+    xs = np.arange(len(y))
+    return y, xs
 
 # ----------------------------- core helpers -----------------------------
 
@@ -67,6 +79,108 @@ def plot_learning_curve(returns: np.ndarray, out_dir: Path) -> Path:
     out_path = Path(out_dir) / "figs" / "learning_curve.png"
     _save_fig(fig, out_path)
     return out_path
+
+
+def plot_learning_curve_smoothed(
+    returns: np.ndarray,
+    out_dir: Path,
+    window: int = 200,
+    title: str = "Learning Curve (smoothed)",
+    filename: str = "learning_curve_smoothed.png",
+    ) -> Path:
+    """
+    Single-run learning curve with moving average (no change to existing API).
+
+    Args:
+        returns: per-episode returns.
+        out_dir: destination directory (figure goes to <out_dir>/figs/).
+        window: moving-average window size.
+        title: figure title.
+        filename: output filename.
+
+    Returns:
+        Path to saved figure.
+    """
+    y, xs = _movavg(np.asarray(returns, dtype=float), window)
+    fig = plt.figure(figsize=(8, 5))
+    plt.plot(xs, y)
+    plt.xlabel("Episode")
+    plt.ylabel(f"Episodic Return ({window}-ep MA)")
+    plt.title(title)
+    plt.axhline(-1.0, color="k", alpha=0.2, linewidth=1)  # trap penalty ref
+    plt.axhline(0.8, color="k", alpha=0.2, linewidth=1)   # typical success return ref
+    plt.grid(True, alpha=0.3)
+
+    out_path = Path(out_dir) / "figs" / filename
+    _save_fig(fig, out_path)
+    return out_path
+
+
+def plot_learning_curves_overlay(
+    method_returns: Dict[str, np.ndarray],
+    out_dir: Path,
+    window: int = 200,
+    also_success: bool = True,
+    title: str = "Learning Curves (Medium, smoothed)",
+    filename: str = "curve_medium_mc_mc-off_q.png",
+    success_threshold: float = 0.0,
+) -> Path:
+    """
+    Overlay multiple learning curves on a *common* 0-based episode axis per method,
+    with moving-average smoothing and optional rolling success rate (twin y-axis).
+
+    This addresses two issues common in per-episode randomized layouts:
+    1) Runs plotted with staggered episode indices (misleading timeline).
+    2) Raw returns look like barcodes; smoothing reveals trends.
+
+    Args:
+        method_returns: mapping from method name -> per-episode returns (np.ndarray).
+        out_dir: destination directory (figure goes to <out_dir>/figs/).
+        window: moving-average window size.
+        also_success: if True, overlay a dashed rolling success rate line (per method).
+        title: figure title.
+        filename: output filename (default matches README expectation).
+        success_threshold: episodes with return > threshold count as success (goal reached).
+
+    Returns:
+        Path to saved figure.
+    """
+    fig, ax = plt.subplots(figsize=(12, 7))
+    ax2 = ax.twinx() if also_success else None
+
+    # plot each method independently starting at x=0
+    for label, ret in method_returns.items():
+        ret = np.asarray(ret, dtype=float)
+
+        # Moving-average of returns
+        r_ma, xs_r = _movavg(ret, window)
+        ax.plot(xs_r, r_ma, label=label)
+
+        # Optional rolling success rate (dashed)
+        if also_success:
+            succ = (ret > success_threshold).astype(float)
+            s_ma, xs_s = _movavg(succ, window)
+            # Use a dashed line for success rate
+            ax2.plot(xs_s, s_ma, linestyle="--", alpha=0.7)
+
+    ax.set_title(title)
+    ax.set_xlabel("Episode")
+    ax.set_ylabel(f"Episodic Return ({window}-ep MA)")
+    ax.axhline(-1.0, color="k", alpha=0.2, linewidth=1)  # trap-termination baseline (−1 + step costs)
+    ax.axhline(0.8, color="k", alpha=0.2, linewidth=1)   # typical success return reference
+    ax.grid(True, alpha=0.25)
+
+    if also_success and ax2 is not None:
+        ax2.set_ylabel("Rolling Success Rate")
+        ax2.set_ylim(0.0, 1.0)
+
+    ax.legend(loc="upper right")
+    fig.tight_layout()
+
+    out_path = Path(out_dir) / "figs" / filename
+    _save_fig(fig, out_path)
+    return out_path
+
 
 
 def plot_value_heatmap_and_policy(env, Q: np.ndarray, out_dir: Path, title: str = "V(s) & Greedy Policy") -> Path:
