@@ -65,6 +65,7 @@ escape-artist-agent/
 ├── requirements.txt                  <- (Optional) for quick install
 ├── Makefile                          <- Shortcuts (train, figures, eval, clean)
 ├── .gitignore                        <- Ignore runs/ artifacts, caches, editor files
+├── .gitattributes                    <- Ignore jupyter notebook files (repository language statistics)
 ├── LICENSE                           <- GNU license
 │
 ├── assets/                           <- Curated visuals & tables used in README
@@ -205,6 +206,7 @@ Results emphasize **generalization**. We evaluate on **per-episode randomized la
 <p align="center">
     <img src="assets/curve_medium_mc_mc-off_q.png" alt="Learning curves: MC (Every), MC-OFF (Weighted), Q-Learning on medium" width="720">
 </p>
+
 ---
 
 ### Value map & greedy policy (fixed layout)
