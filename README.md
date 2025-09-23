@@ -308,7 +308,7 @@ Covers:
 ---
 
 ## 📂 Documentation
-- **[Full CLI walkthrough](docs/CLI_WALKTHROUGH.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
+- **[Full CLI Walkthrough](docs/CLI_walkthrough.md)** — end-to-end training, plotting, evaluation (easy + medium), GIFs, and tips.
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - full docstrings and additional notes.
 - **[Portfolio PPTX](docs/Portfolio_PPTX.pptx)** - portfolio pptx.
 
